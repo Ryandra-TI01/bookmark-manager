@@ -1,43 +1,66 @@
 # Product Requirement
 
-## Project Name
+## Nama Proyek
+
 Bookmark Manager
 
 ## Objective
-Aplikasi web untuk menyimpan dan mengelola link pribadi berbasis akun.
 
-## Core Features
+Aplikasi web untuk menyimpan, mengelola, dan menemukan kembali bookmark pribadi secara cepat dengan akses berbasis akun.
 
-1. Authentication
+## Scope MVP
+
+### Authentication
+
 - user register
 - user login
 - user logout
+- protected access ke dashboard
 
-2. Bookmark Management
-- add bookmark
+### Bookmark Management
+
+- tambah bookmark
 - edit bookmark
-- delete bookmark
-- view bookmark list
+- hapus bookmark
+- lihat daftar bookmark milik user
 
-3. Bookmark Organization
-- tag bookmark
-- filter bookmark by tag
+### Bookmark Organization
 
-4. Search
-- search bookmark by title
-- search bookmark by url
+- assign tag ke bookmark
+- create tag inline saat membuat atau mengedit bookmark
+- filter bookmark berdasarkan tag
+
+### Search
+
+- search berdasarkan title
+- search berdasarkan URL
+- search dilakukan cepat di sisi client setelah data user dimuat
+
+### UX Baseline
+
+- loading state
+- empty state
+- error state
+- toast feedback
+- light mode dan dark mode
 
 ## Tech Stack
 
-Frontend
-- React
-- shadcn/ui
+### Frontend
 
-Backend
+- React
+- React Router
+- Tailwind CSS
+- komponen bergaya `shadcn/ui`
+
+### Backend
+
 - Supabase
 
-Database
+### Database
+
 - PostgreSQL
 
-Hosting
+### Hosting
+
 - Vercel

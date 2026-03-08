@@ -1,41 +1,55 @@
 # Bookmark Manager
 
-Production-ready MVP for private bookmark management with React, shadcn-style UI components, and Supabase.
+Bookmark Manager adalah aplikasi web untuk menyimpan, mencari, dan mengelola bookmark pribadi berbasis akun. Aplikasi ini memakai React di frontend dan Supabase untuk autentikasi serta database.
 
-## Features
+## Fitur
 
-- email/password authentication
-- protected dashboard
-- create, edit, delete bookmarks
-- normalized tag system with inline tag creation
-- instant client-side search by title or URL
-- tag filtering
-- loading, empty, and error states
+- autentikasi email/password
+- protected route untuk dashboard
+- tambah, ubah, dan hapus bookmark
+- tag ter-normalisasi dengan inline tag creation
+- pencarian instan berdasarkan title atau URL
+- filter bookmark berdasarkan tag
+- light mode dan dark mode
+- loading state, empty state, error state, dan toast feedback
 
 ## Stack
 
 - React 19
 - React Router
-- Tailwind CSS + shadcn-style component structure
-- Supabase Auth + Postgres
+- Tailwind CSS + komponen bergaya `shadcn/ui`
+- Supabase Auth + PostgreSQL
 - Vitest + Testing Library
 
-## Setup
+## Struktur Halaman
 
-1. Install dependencies:
+- `/login`
+- `/register`
+- `/dashboard`
+
+Detail halaman dan interaksi UI tersedia di [docs/ui_pages.md](/docs/ui_pages.md).
+
+## Setup Lokal
+
+1. Install dependency:
    `npm install`
-2. Copy environment values from `.env.example` and set:
+2. Siapkan environment file berdasarkan [`.env.example`](/.env.example)
+3. Isi variabel berikut:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
-3. Apply the SQL in [supabase/schema.sql](/home/ryand/bookmark-manager/supabase/schema.sql) to your Supabase project.
-4. Start the app:
+4. Jalankan SQL schema dari [supabase/schema.sql](/supabase/schema.sql) di project Supabase
+5. Pastikan provider email/password aktif di Supabase Auth
+6. Jalankan app:
    `npm run dev`
 
 ## Scripts
 
-- `npm run dev`
-- `npm run build`
-- `npm run lint`
-- `npm test`
+- `npm run dev`: jalankan development server
+- `npm run build`: build production
+- `npm run lint`: cek linting
+- `npm test`: jalankan test
+- `npm run test:watch`: jalankan test mode watch
 
-Docs are available in [docs/README.md](/home/ryand/bookmark-manager/docs/README.md).
+## Dokumentasi
+
+Dokumentasi proyek dirangkum di [docs/README.md](/docs/README.md).
