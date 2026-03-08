@@ -4,6 +4,7 @@ import type { ReactElement } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 
 import { AuthContext } from '@/providers/auth-context'
+import { ThemeProvider } from '@/providers/theme-provider'
 import { ToastProvider } from '@/providers/toast-provider'
 import type { AuthStatus } from '@/types/models'
 
@@ -38,10 +39,12 @@ export function renderWithProviders(ui: ReactElement, options: RenderOptions = {
   }
 
   return render(
-    <ToastProvider>
-      <AuthContext.Provider value={authValue}>
-        <MemoryRouter initialEntries={[options.route ?? '/dashboard']}>{ui}</MemoryRouter>
-      </AuthContext.Provider>
-    </ToastProvider>,
+    <ThemeProvider>
+      <ToastProvider>
+        <AuthContext.Provider value={authValue}>
+          <MemoryRouter initialEntries={[options.route ?? '/dashboard']}>{ui}</MemoryRouter>
+        </AuthContext.Provider>
+      </ToastProvider>
+    </ThemeProvider>,
   )
 }

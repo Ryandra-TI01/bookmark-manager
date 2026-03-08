@@ -7,7 +7,7 @@ Folder `docs/` berisi ringkasan requirement, UI, arsitektur, dan interaksi data 
 - [product_requirement.md](/docs/product_requirement.md)
   Ringkasan objective, scope MVP, dan fitur utama.
 - [ui_pages.md](/docs/ui_pages.md)
-  Struktur halaman, komponen penting, dan state UX yang perlu ditangani.
+  Struktur halaman, komponen penting, state UX, dan dialog pengelolaan tag.
 - [api_interaction.md](/docs/api_interaction.md)
   Pola interaksi Supabase untuk auth, bookmark, dan tag.
 - [database_schema.md](/docs/database_schema.md)

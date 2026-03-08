@@ -45,13 +45,14 @@ Supabase Backend
 - auth service untuk login, register, logout, dan session restore
 - bookmark service untuk list, create, update, delete bookmark
 - tag resolution disinkronkan melalui bookmark service
+- tag update dan delete juga dikelola di service layer yang sama
 
 ## Data Flow
 
 1. User login atau restore session
 2. Dashboard memuat bookmark dan tag milik user
 3. Search dan filter berjalan di client state
-4. Mutasi bookmark tetap disimpan ke Supabase
+4. Mutasi bookmark dan tag tetap disimpan ke Supabase
 5. RLS memastikan hanya data milik user yang dapat diakses
 
 ## Hosting

@@ -8,6 +8,7 @@ Bookmark Manager adalah aplikasi web untuk menyimpan, mencari, dan mengelola boo
 - protected route untuk dashboard
 - tambah, ubah, dan hapus bookmark
 - tag ter-normalisasi dengan inline tag creation
+- edit dan hapus tag langsung dari dashboard
 - pencarian instan berdasarkan title atau URL
 - filter bookmark berdasarkan tag
 - light mode dan dark mode
@@ -39,7 +40,8 @@ Detail halaman dan interaksi UI tersedia di [docs/ui_pages.md](/docs/ui_pages.md
    - `VITE_SUPABASE_ANON_KEY`
 4. Jalankan SQL schema dari [supabase/schema.sql](/supabase/schema.sql) di project Supabase
 5. Pastikan provider email/password aktif di Supabase Auth
-6. Jalankan app:
+6. Favicon browser memakai [public/favicon.png](/public/favicon.png)
+7. Jalankan app:
    `npm run dev`
 
 ## Scripts

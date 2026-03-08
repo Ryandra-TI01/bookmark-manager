@@ -4,6 +4,7 @@ import { BookmarkPlus, LogOut, Search, Tags } from 'lucide-react'
 import { BookmarkCard } from '@/components/bookmarks/bookmark-card'
 import { BookmarkFormDialog } from '@/components/bookmarks/bookmark-form-dialog'
 import { DeleteBookmarkDialog } from '@/components/bookmarks/delete-bookmark-dialog'
+import { TagManagerDialog } from '@/components/bookmarks/tag-manager-dialog'
 import { AppShell } from '@/components/layout/app-shell'
 import { ThemeToggle } from '@/components/layout/theme-toggle'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
@@ -30,10 +31,13 @@ export function DashboardPage() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedTagId, setSelectedTagId] = useState('all')
   const [formOpen, setFormOpen] = useState(false)
+  const [tagManagerOpen, setTagManagerOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [editingBookmark, setEditingBookmark] = useState<Bookmark | null>(null)
   const [bookmarkToDelete, setBookmarkToDelete] = useState<Bookmark | null>(null)
-  const [pendingAction, setPendingAction] = useState<'save' | 'delete' | 'logout' | null>(null)
+  const [pendingAction, setPendingAction] = useState<
+    'save' | 'delete' | 'logout' | 'tag-update' | 'tag-delete' | null
+  >(null)
   const [reloadKey, setReloadKey] = useState(0)
   const deferredSearch = useDeferredValue(searchQuery)
 
@@ -181,6 +185,74 @@ export function DashboardPage() {
     }
   }
 
+  const handleTagRename = async (tagId: string, name: string) => {
+    setPendingAction('tag-update')
+
+    try {
+      const updatedTag = await bookmarkService.updateTag(tagId, name)
+
+      setTags((current) =>
+        current
+          .map((tag) => (tag.id === updatedTag.id ? updatedTag : tag))
+          .sort((left, right) => left.name.localeCompare(right.name)),
+      )
+      setBookmarks((current) =>
+        current.map((bookmark) => ({
+          ...bookmark,
+          tags: bookmark.tags
+            .map((tag) => (tag.id === updatedTag.id ? updatedTag : tag))
+            .sort((left, right) => left.name.localeCompare(right.name)),
+        })),
+      )
+      toast({
+        title: 'Tag updated',
+        description: updatedTag.name,
+      })
+    } catch (tagError) {
+      toast({
+        title: 'Unable to update tag',
+        description: getErrorMessage(tagError),
+        variant: 'destructive',
+      })
+      throw tagError
+    } finally {
+      setPendingAction(null)
+    }
+  }
+
+  const handleTagDelete = async (tag: Tag) => {
+    setPendingAction('tag-delete')
+
+    try {
+      await bookmarkService.deleteTag(tag.id)
+      setTags((current) => current.filter((currentTag) => currentTag.id !== tag.id))
+      setBookmarks((current) =>
+        current.map((bookmark) => ({
+          ...bookmark,
+          tags: bookmark.tags.filter((bookmarkTag) => bookmarkTag.id !== tag.id),
+        })),
+      )
+
+      if (selectedTagId === tag.id) {
+        setSelectedTagId('all')
+      }
+
+      toast({
+        title: 'Tag deleted',
+        description: tag.name,
+      })
+    } catch (tagError) {
+      toast({
+        title: 'Unable to delete tag',
+        description: getErrorMessage(tagError),
+        variant: 'destructive',
+      })
+      throw tagError
+    } finally {
+      setPendingAction(null)
+    }
+  }
+
   return (
     <AppShell className="space-y-6">
       <section className="grid gap-6 lg:grid-cols-[1.4fr_0.8fr]">
@@ -205,10 +277,10 @@ export function DashboardPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 self-start">
+              <div className="flex w-full flex-wrap items-center gap-2 self-start sm:w-auto sm:flex-nowrap">
                 <ThemeToggle className="border-white/10 bg-white/10 text-slate-100 hover:bg-white/15" />
                 <Button
-                  className="border-white/10 bg-white/10 text-slate-100 hover:bg-white/15"
+                  className="w-full border-white/10 bg-white/10 text-slate-100 hover:bg-white/15 sm:w-auto"
                   disabled={pendingAction === 'logout'}
                   variant="outline"
                   onClick={() => void handleLogout()}
@@ -230,7 +302,7 @@ export function DashboardPage() {
                 />
               </div>
               <Button
-                className="bg-amber-400 text-slate-950 hover:bg-amber-300"
+                className="w-full bg-amber-400 text-slate-950 hover:bg-amber-300 sm:w-auto"
                 onClick={() => {
                   setEditingBookmark(null)
                   setFormOpen(true)
@@ -251,9 +323,20 @@ export function DashboardPage() {
             </div>
             <Separator />
             <div className="grid gap-2">
-              <div className="flex items-center gap-2 text-sm font-medium">
-                <Tags className="size-4" />
-                Filter by tag
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-2 text-sm font-medium">
+                  <Tags className="size-4" />
+                  Filter by tag
+                </div>
+                <Button
+                  className="w-full sm:w-auto"
+                  size="sm"
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setTagManagerOpen(true)}
+                >
+                  Manage tags
+                </Button>
               </div>
               <Select value={selectedTagId} onValueChange={setSelectedTagId}>
                 <SelectTrigger aria-label="Filter bookmarks by tag">
@@ -392,6 +475,15 @@ export function DashboardPage() {
             setBookmarkToDelete(null)
           }
         }}
+      />
+
+      <TagManagerDialog
+        open={tagManagerOpen}
+        pending={pendingAction === 'tag-update' || pendingAction === 'tag-delete'}
+        tags={tags}
+        onDelete={handleTagDelete}
+        onOpenChange={setTagManagerOpen}
+        onRename={handleTagRename}
       />
     </AppShell>
   )

@@ -28,6 +28,8 @@ Aplikasi web untuk menyimpan, mengelola, dan menemukan kembali bookmark pribadi 
 
 - assign tag ke bookmark
 - create tag inline saat membuat atau mengedit bookmark
+- edit tag yang sudah ada
+- hapus tag yang sudah tidak dipakai
 - filter bookmark berdasarkan tag
 
 ### Search

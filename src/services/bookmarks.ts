@@ -1,4 +1,4 @@
-import { dedupeTagNames } from '@/lib/utils'
+import { dedupeTagNames, normalizeTagName } from '@/lib/utils'
 import { getSupabaseClient } from '@/lib/supabase'
 import type { Bookmark, BookmarkFormValues, Tag } from '@/types/models'
 
@@ -134,6 +134,20 @@ async function ensureTagIds(tagNames: string[], userId: string) {
   })
 }
 
+async function listUserTags(userId: string) {
+  const { data, error } = await getSupabaseClient()
+    .from('tags')
+    .select('id, name')
+    .eq('user_id', userId)
+    .order('name', { ascending: true })
+
+  if (error) {
+    throw error
+  }
+
+  return (data ?? []) as Tag[]
+}
+
 async function syncBookmarkTags(bookmarkId: string, tagIds: string[]) {
   const client = getSupabaseClient()
   const { error: deleteError } = await client
@@ -173,17 +187,7 @@ export const bookmarkService = {
   },
   async listTags() {
     const userId = await getCurrentUserId()
-    const { data, error } = await getSupabaseClient()
-      .from('tags')
-      .select('id, name')
-      .eq('user_id', userId)
-      .order('name', { ascending: true })
-
-    if (error) {
-      throw error
-    }
-
-    return (data ?? []) as Tag[]
+    return listUserTags(userId)
   },
   async createBookmark(values: BookmarkFormValues) {
     const userId = await getCurrentUserId()
@@ -233,6 +237,48 @@ export const bookmarkService = {
       .from('bookmarks')
       .delete()
       .eq('id', bookmarkId)
+
+    if (error) {
+      throw error
+    }
+  },
+  async updateTag(tagId: string, name: string) {
+    const userId = await getCurrentUserId()
+    const nextName = normalizeTagName(name)
+
+    if (!nextName) {
+      throw new Error('Tag name is required.')
+    }
+
+    const existingTags = await listUserTags(userId)
+    const hasDuplicate = existingTags.some(
+      (tag) => tag.id !== tagId && tag.name.toLocaleLowerCase() === nextName.toLocaleLowerCase(),
+    )
+
+    if (hasDuplicate) {
+      throw new Error(`Tag "${nextName}" already exists.`)
+    }
+
+    const { data, error } = await getSupabaseClient()
+      .from('tags')
+      .update({
+        name: nextName,
+      })
+      .eq('id', tagId)
+      .select('id, name')
+      .single()
+
+    if (error) {
+      throw error
+    }
+
+    return data as Tag
+  },
+  async deleteTag(tagId: string) {
+    const { error } = await getSupabaseClient()
+      .from('tags')
+      .delete()
+      .eq('id', tagId)
 
     if (error) {
       throw error

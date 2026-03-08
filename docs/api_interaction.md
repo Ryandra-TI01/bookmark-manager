@@ -94,7 +94,24 @@ Langkah umum:
 3. hapus relasi lama di `bookmark_tags`
 4. insert relasi baru yang aktif
 
-## 5. Delete Bookmark
+## 5. Update Tag
+
+Langkah umum:
+
+1. validasi nama tag baru
+2. cek duplikasi nama tag per user
+3. update row di tabel `tags`
+4. sinkronkan nama tag di state client
+
+## 6. Delete Tag
+
+Langkah umum:
+
+1. hapus row di tabel `tags`
+2. relasi di `bookmark_tags` ikut terhapus lewat foreign key cascade
+3. state bookmark di client ikut dibersihkan dari tag tersebut
+
+## 7. Delete Bookmark
 
 ```ts
 supabase
@@ -103,7 +120,7 @@ supabase
   .eq("id", bookmarkId)
 ```
 
-## 6. Search dan Filter
+## 8. Search dan Filter
 
 - search title dan URL dilakukan di client setelah data dimuat
 - filter tag juga dilakukan di client menggunakan data bookmark yang sudah tersedia

@@ -143,129 +143,139 @@ export function BookmarkFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="gap-0 p-0">
+        <DialogHeader className="border-b border-border/70 px-4 pb-4 pt-5 sm:px-6 sm:pb-5 sm:pt-6">
           <DialogTitle>{bookmark ? 'Edit bookmark' : 'Add bookmark'}</DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="max-w-[42ch] leading-6">
             Save title, URL, description, and tags in one place.
           </DialogDescription>
         </DialogHeader>
 
-        <form className="grid gap-5" onSubmit={handleSubmit}>
-          <div className="grid gap-2">
-            <Label htmlFor="bookmark-title">Title</Label>
-            <Input
-              id="bookmark-title"
-              placeholder="Design systems handbook"
-              value={values.title}
-              onChange={(event) =>
-                setValues((current) => ({ ...current, title: event.target.value }))
-              }
-            />
-            {errors.title ? <p className="text-sm text-destructive">{errors.title}</p> : null}
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="bookmark-url">URL</Label>
-            <Input
-              id="bookmark-url"
-              placeholder="https://example.com"
-              type="url"
-              value={values.url}
-              onChange={(event) =>
-                setValues((current) => ({ ...current, url: event.target.value }))
-              }
-            />
-            {errors.url ? <p className="text-sm text-destructive">{errors.url}</p> : null}
-          </div>
-
-          <div className="grid gap-2">
-            <Label htmlFor="bookmark-description">Description</Label>
-            <Textarea
-              id="bookmark-description"
-              placeholder="Why this link matters and what you want to find later."
-              value={values.description}
-              onChange={(event) =>
-                setValues((current) => ({ ...current, description: event.target.value }))
-              }
-            />
-          </div>
-
-          <div className="grid gap-3">
-            <Label htmlFor="bookmark-tags">Tags</Label>
-            <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-muted/30 p-4">
-              <div className="flex flex-col gap-2 sm:flex-row">
-                <Input
-                  id="bookmark-tags"
-                  placeholder="Add a tag and press enter"
-                  value={tagInput}
-                  onChange={(event) => setTagInput(event.target.value)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      event.preventDefault()
-                      addTag(tagInput)
-                    }
-                  }}
-                />
-                <Button
-                  className="sm:w-auto"
-                  type="button"
-                  variant="secondary"
-                  onClick={() => addTag(tagInput)}
-                >
-                  <Plus className="size-4" />
-                  Add tag
-                </Button>
-              </div>
-
-              {values.tagNames.length ? (
-                <div className="flex flex-wrap gap-2">
-                  {values.tagNames.map((tagName) => (
-                    <Badge
-                      key={tagName}
-                      className="gap-1 rounded-full bg-card px-3 py-1 text-sm"
-                      variant="outline"
-                    >
-                      {tagName}
-                      <button
-                        className="rounded-full text-muted-foreground transition hover:text-foreground"
-                        type="button"
-                        onClick={() => removeTag(tagName)}
-                      >
-                        <X className="size-3.5" />
-                        <span className="sr-only">Remove {tagName}</span>
-                      </button>
-                    </Badge>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">No tags selected yet.</p>
-              )}
-
-              {availableSuggestions.length ? (
-                <div className="flex flex-wrap gap-2">
-                  {availableSuggestions.map((tag) => (
-                    <Button
-                      key={tag.id}
-                      size="sm"
-                      type="button"
-                      variant="outline"
-                      onClick={() => addTag(tag.name)}
-                    >
-                      {tag.name}
-                    </Button>
-                  ))}
-                </div>
-              ) : null}
+        <form className="grid min-h-0 gap-0" onSubmit={handleSubmit}>
+          <div className="grid max-h-[calc(100dvh-13.5rem)] gap-5 overflow-y-auto px-4 py-4 sm:max-h-[calc(100dvh-16rem)] sm:px-6 sm:py-5">
+            <div className="grid gap-2">
+              <Label htmlFor="bookmark-title">Title</Label>
+              <Input
+                id="bookmark-title"
+                placeholder="Design systems handbook"
+                value={values.title}
+                onChange={(event) =>
+                  setValues((current) => ({ ...current, title: event.target.value }))
+                }
+              />
+              {errors.title ? <p className="text-sm text-destructive">{errors.title}</p> : null}
             </div>
-            {errors.tags ? <p className="text-sm text-destructive">{errors.tags}</p> : null}
+
+            <div className="grid gap-2">
+              <Label htmlFor="bookmark-url">URL</Label>
+              <Input
+                id="bookmark-url"
+                placeholder="https://example.com"
+                type="url"
+                value={values.url}
+                onChange={(event) =>
+                  setValues((current) => ({ ...current, url: event.target.value }))
+                }
+              />
+              {errors.url ? <p className="text-sm text-destructive">{errors.url}</p> : null}
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="bookmark-description">Description</Label>
+              <Textarea
+                className="min-h-[128px] sm:min-h-[144px]"
+                id="bookmark-description"
+                placeholder="Why this link matters and what you want to find later."
+                value={values.description}
+                onChange={(event) =>
+                  setValues((current) => ({ ...current, description: event.target.value }))
+                }
+              />
+            </div>
+
+            <div className="grid gap-3">
+              <Label htmlFor="bookmark-tags">Tags</Label>
+              <div className="flex flex-col gap-3 rounded-2xl border border-border/70 bg-muted/30 p-3 sm:p-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
+                  <Input
+                    id="bookmark-tags"
+                    placeholder="Add a tag and press enter"
+                    value={tagInput}
+                    onChange={(event) => setTagInput(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') {
+                        event.preventDefault()
+                        addTag(tagInput)
+                      }
+                    }}
+                  />
+                  <Button
+                    className="w-full sm:w-auto"
+                    type="button"
+                    variant="secondary"
+                    onClick={() => addTag(tagInput)}
+                  >
+                    <Plus className="size-4" />
+                    Add tag
+                  </Button>
+                </div>
+
+                {values.tagNames.length ? (
+                  <div className="flex max-h-32 flex-wrap gap-2 overflow-y-auto pr-1">
+                    {values.tagNames.map((tagName) => (
+                      <Badge
+                        key={tagName}
+                        className="max-w-full gap-1 rounded-full bg-card px-3 py-1 text-sm"
+                        variant="outline"
+                      >
+                        <span className="truncate">{tagName}</span>
+                        <button
+                          className="shrink-0 rounded-full text-muted-foreground transition hover:text-foreground"
+                          type="button"
+                          onClick={() => removeTag(tagName)}
+                        >
+                          <X className="size-3.5" />
+                          <span className="sr-only">Remove {tagName}</span>
+                        </button>
+                      </Badge>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">No tags selected yet.</p>
+                )}
+
+                {availableSuggestions.length ? (
+                  <div className="flex max-h-36 flex-wrap gap-2 overflow-y-auto pr-1">
+                    {availableSuggestions.map((tag) => (
+                      <Button
+                        key={tag.id}
+                        className="max-w-full"
+                        size="sm"
+                        type="button"
+                        variant="outline"
+                        onClick={() => addTag(tag.name)}
+                      >
+                        <span className="truncate">{tag.name}</span>
+                      </Button>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+              {errors.tags ? <p className="text-sm text-destructive">{errors.tags}</p> : null}
+            </div>
           </div>
 
-          <DialogFooter>
-            <Button disabled={pending} type="button" variant="ghost" onClick={() => onOpenChange(false)}>
+          <DialogFooter className="border-t border-border/70 px-4 py-4 sm:px-6">
+            <Button
+              className="w-full sm:w-auto"
+              disabled={pending}
+              type="button"
+              variant="ghost"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
-            <Button disabled={pending} type="submit">
+            <Button className="w-full sm:w-auto" disabled={pending} type="submit">
               {bookmark ? 'Save changes' : 'Save bookmark'}
             </Button>
           </DialogFooter>

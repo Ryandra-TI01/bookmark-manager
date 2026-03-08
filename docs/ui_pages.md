@@ -43,6 +43,7 @@ Komponen utama:
 - theme toggle
 - logout button
 - tag filter select
+- manage tags button
 - bookmark statistics
 - bookmark list grid
 
@@ -83,7 +84,24 @@ Komponen:
 - cancel button
 - confirm delete button
 
-## 6. Bookmark Card
+## 6. Tag Management Dialog
+
+Digunakan untuk mengelola tag yang sudah ada.
+
+Komponen:
+
+- daftar tag milik user
+- inline rename tag
+- delete tag action
+- delete confirmation
+
+State penting:
+
+- rename validation error
+- delete loading
+- empty state saat belum ada tag
+
+## 7. Bookmark Card
 
 Konten utama:
 
