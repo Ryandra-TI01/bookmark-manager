@@ -169,6 +169,7 @@ export function BookmarkFormDialog({
             <div className="grid gap-2">
               <Label htmlFor="bookmark-url">URL</Label>
               <Input
+                autoFocus
                 id="bookmark-url"
                 placeholder="https://example.com"
                 type="url"
